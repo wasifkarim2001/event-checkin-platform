@@ -6,7 +6,7 @@
 **Status:** Idea. Setup session not started yet.
 
 ## Why this project
-- **Closes gaps** (see `../skill_gaps.md` and `../skill_roadmap.md`): Django, REST APIs, React, SQL design, testing, Docker, CI/CD, Linux/ops, logging and monitoring, cloud deploy, Git workflow.
+- **Closes gaps** (tracked in my private learning roadmap): Django, REST APIs, React, SQL design, testing, Docker, CI/CD, Linux/ops, logging and monitoring, cloud deploy, Git workflow.
 - **Targets:** entry-level software developer (e.g. PheedLoop-style Toronto roles) and IT operations / production support (e.g. FDM). Both are TEER 1–2 jobs, which fits the PR plan.
 - **Why events:** attendee data, check-in speed and live counts are realistic problems with real database, API and "what breaks at 500 people?" questions to answer.
 
