@@ -1,9 +1,11 @@
 # Event Check-In Platform
 
+> **Next time (updated 2026-11-09):** Setup is done on the PC (Python 3.14 via `py -3.14`, Git, gh, Docker Desktop on WSL2, all checked). Milestones M0 to M5 exist on GitHub. Resume at **M0 step 0**: create the 6 M0 issues with `gh issue create ... --milestone "M0: Setup, Docker, CI"` in the VS Code terminal at `Z:\event-checkin-platform`, then step 1 (feature branch, `.gitignore`, `.gitattributes`, `.env.example`).
+
 > A web app where organizers create events, attendees register and get a check-in code, and staff check people in at the door while a dashboard shows live attendance. A small version of the kind of event software real companies run.
 
 **Stack:** Python, Django, Django REST Framework, PostgreSQL, React, Docker Compose, pytest, GitHub Actions
-**Status:** Idea. Setup session not started yet.
+**Status:** M0 in progress (dev setup done, milestones created).
 
 ## Why this project
 - **Closes gaps** (tracked in my private learning roadmap): Django, REST APIs, React, SQL design, testing, Docker, CI/CD, Linux/ops, logging and monitoring, cloud deploy, Git workflow.
