@@ -8,9 +8,13 @@
 **Status:** M0 in progress (dev setup done, milestones created).
 
 ## Why this project
-- **Closes gaps** (tracked in my private learning roadmap): Django, REST APIs, React, SQL design, testing, Docker, CI/CD, Linux/ops, logging and monitoring, cloud deploy, Git workflow.
-- **Targets:** entry-level software developer (e.g. PheedLoop-style Toronto roles) and IT operations / production support (e.g. FDM). Both are TEER 1–2 jobs, which fits the PR plan.
-- **Why events:** attendee data, check-in speed and live counts are realistic problems with real database, API and "what breaks at 500 people?" questions to answer.
+Checking people in at an event looks simple until a line forms at the door. Several staff scan codes at once, the same ticket must never be accepted twice, and the organizer wants an attendance count they can trust in real time. Those are the same problems everyday business software has to handle: data integrity under concurrent writes, a clean API between the server and its clients, and a system that keeps running and can be diagnosed when something goes wrong.
+
+The plan is to build it the way a small team would ship a production service, end to end. The milestone table below shows which parts are done so far.
+- **Backend:** a REST API in Django and Django REST Framework on PostgreSQL, with database constraints that rule out a double check-in.
+- **Frontend:** a React app for registration, the staff check-in screen and a live dashboard.
+- **Quality:** automated tests with pytest, run by GitHub Actions on every pull request.
+- **Operations:** Docker Compose for local development, structured logging, a health check endpoint and a cloud deployment.
 
 ## Features
 **MVP**
