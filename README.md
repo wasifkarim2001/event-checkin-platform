@@ -1,14 +1,21 @@
 # Event Check-In Platform
 
+> **Next time (updated 2026-11-09):** Setup is done on the PC (Python 3.14 via `py -3.14`, Git, gh, Docker Desktop on WSL2, all checked). Milestones M0 to M5 exist on GitHub. Resume at **M0 step 0**: create the 6 M0 issues with `gh issue create ... --milestone "M0: Setup, Docker, CI"` in the VS Code terminal at `Z:\event-checkin-platform`, then step 1 (feature branch, `.gitignore`, `.gitattributes`, `.env.example`).
+
 > A web app where organizers create events, attendees register and get a check-in code, and staff check people in at the door while a dashboard shows live attendance. A small version of the kind of event software real companies run.
 
 **Stack:** Python, Django, Django REST Framework, PostgreSQL, React, Docker Compose, pytest, GitHub Actions
+
 **Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI) done. M1 (data model) next.
 
 ## Why this project
-- **Closes gaps** (tracked in my private learning roadmap): Django, REST APIs, React, SQL design, testing, Docker, CI/CD, Linux/ops, logging and monitoring, cloud deploy, Git workflow.
-- **Targets:** entry-level software developer (e.g. PheedLoop-style Toronto roles) and IT operations / production support (e.g. FDM). Both are TEER 1–2 jobs, which fits the PR plan.
-- **Why events:** attendee data, check-in speed and live counts are realistic problems with real database, API and "what breaks at 500 people?" questions to answer.
+Checking people in at an event looks simple until a line forms at the door. Several staff scan codes at once, the same ticket must never be accepted twice, and the organizer wants an attendance count they can trust in real time. Those are the same problems everyday business software has to handle: data integrity under concurrent writes, a clean API between the server and its clients, and a system that keeps running and can be diagnosed when something goes wrong.
+
+The plan is to build it the way a small team would ship a production service, end to end. The milestone table below shows which parts are done so far.
+- **Backend:** a REST API in Django and Django REST Framework on PostgreSQL, with database constraints that rule out a double check-in.
+- **Frontend:** a React app for registration, the staff check-in screen and a live dashboard.
+- **Quality:** automated tests with pytest, run by GitHub Actions on every pull request.
+- **Operations:** Docker Compose for local development, structured logging, a health check endpoint and a cloud deployment.
 
 ## Features
 **MVP**
