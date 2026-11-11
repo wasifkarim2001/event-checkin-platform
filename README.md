@@ -3,7 +3,7 @@
 > A web app where organizers create events, attendees register and get a check-in code, and staff check people in at the door while a dashboard shows live attendance. A small version of the kind of event software real companies run.
 
 **Stack:** Python, Django, Django REST Framework, PostgreSQL, React, Docker Compose, pytest, GitHub Actions
-**Status:** Idea. Setup session not started yet.
+**Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI) done. M1 (data model) next.
 
 ## Why this project
 - **Closes gaps** (tracked in my private learning roadmap): Django, REST APIs, React, SQL design, testing, Docker, CI/CD, Linux/ops, logging and monitoring, cloud deploy, Git workflow.
@@ -27,7 +27,7 @@
 ## Milestones (about 12 weeks at 6–8 hrs/week)
 | # | Milestone | Skills | Target | Done |
 |---|---|---|---|---|
-| M0 | Repo, Docker Compose (Django + Postgres), first test, GitHub Actions running tests | Git workflow, Docker, CI, pytest | week 2 | ☐ |
+| M0 | Repo, Docker Compose (Django + Postgres), first test, GitHub Actions running tests | Git workflow, Docker, CI, pytest | week 2 | ☑ |
 | M1 | Data model (Event, TicketType, Attendee, CheckIn), migrations, admin, indexes | SQL, schema design, Django | week 4 | ☐ |
 | M2 | REST API with auth, permissions, filtering, pagination, OpenAPI docs; 80%+ test coverage | DRF, REST design, TDD | week 6 | ☐ |
 | M3 | React frontend: events, registration, check-in screen, dashboard | JS/TS, React | week 8 | ☐ |
@@ -40,9 +40,16 @@
 - Numbers on the resume come only from real measurements.
 
 ## How to run
+Needs Docker Desktop.
+
 ```bash
-# filled in at M0
+cp .env.example .env        # then set your own local POSTGRES_PASSWORD
+docker compose up -d        # starts PostgreSQL and Django
+docker compose run --rm web python manage.py migrate
+docker compose run --rm web pytest
 ```
+
+The app is at http://localhost:8000 and the health check at http://localhost:8000/health/.
 
 ## Results (measured, not guessed)
 - Test coverage: 
