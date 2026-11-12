@@ -1,6 +1,6 @@
 # Event Check-In Platform
 
-> **Next time (updated 2026-11-09):** Setup is done on the PC (Python 3.14 via `py -3.14`, Git, gh, Docker Desktop on WSL2, all checked). Milestones M0 to M5 exist on GitHub. Resume at **M0 step 0**: create the 6 M0 issues with `gh issue create ... --milestone "M0: Setup, Docker, CI"` in the VS Code terminal at `Z:\event-checkin-platform`, then step 1 (feature branch, `.gitignore`, `.gitattributes`, `.env.example`).
+> **Next time (updated 2026-11-11):** M0 is merged. M1 (data model) is in progress on a feature branch. Local setup: Docker Desktop running, `.env` created from `.env.example`, `docker compose run --rm web pytest` passing.
 
 > A web app where organizers create events, attendees register and get a check-in code, and staff check people in at the door while a dashboard shows live attendance. A small version of the kind of event software real companies run.
 
@@ -42,9 +42,12 @@ The plan is to build it the way a small team would ship a production service, en
 | M5 | Load test, CSV import/export, architecture diagram, demo, final README, resume bullets | Performance, docs, communication | week 12 | ☐ |
 
 ## Working agreement
-- The student writes the code. Claude explains, reviews, and unblocks. Every concept gets explained before it's used, because the student must be able to defend each line in an interview.
-- Small commits on feature branches and pull requests, even working alone.
-- Numbers on the resume come only from real measurements.
+- Claude writes the code in small steps on feature branches, and every change goes through a pull request, even working alone.
+- Code comments stay short. The explanations live outside the code: after each file or code block comes a "Why" covering what it does, why it's written that way, which alternatives were considered, and the tradeoff. Design decisions (schema, constraints, indexes, API shape, auth, testing approach) get the same treatment.
+- Explanations are pitched at a fourth-year CS undergrad: Django, DRF, PostgreSQL, Docker and CI specifics are explained, general programming basics are not.
+- Each milestone ends with 3 to 5 interview questions it raises, with short, honest answers, so every part can be defended in an interview.
+- Scope stays tight: each milestone does only what a working version needs, and anything cut is listed.
+- Numbers in this README and on the resume come only from real measurements.
 
 ## How to run
 Needs Docker Desktop.
