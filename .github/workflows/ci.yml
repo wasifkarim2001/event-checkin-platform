@@ -12,5 +12,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Create .env from the example file
         run: cp .env.example .env
+      - name: Fail if a model change has no migration
+        run: docker compose run --rm web python manage.py makemigrations --check --dry-run
       - name: Run tests
         run: docker compose run --rm web pytest
