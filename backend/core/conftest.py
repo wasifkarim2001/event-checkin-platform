@@ -28,3 +28,32 @@ def ticket_type(event):
 @pytest.fixture
 def attendee(ticket_type):
     return Attendee.objects.create(ticket_type=ticket_type, name="Ada", email="ada@example.com")
+
+
+def make_user(username):
+    return get_user_model().objects.create_user(username=username, password="unused")
+
+
+@pytest.fixture
+def staff_user(event):
+    user = make_user("staff")
+    event.staff.add(user)
+    return user
+
+
+@pytest.fixture
+def outsider(db):
+    return make_user("outsider")
+
+
+@pytest.fixture
+def api_as():
+    from rest_framework.test import APIClient
+
+    def make(user=None):
+        client = APIClient()
+        if user is not None:
+            client.force_authenticate(user)
+        return client
+
+    return make

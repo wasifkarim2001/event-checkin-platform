@@ -1,12 +1,12 @@
 # Event Check-In Platform
 
-> **Next time (updated 2026-11-11):** M0 is merged. M1 (data model) is in progress on a feature branch. Local setup: Docker Desktop running, `.env` created from `.env.example`, `docker compose run --rm web pytest` passing.
+> **Next time (updated 2026-11-11):** M0 and M1 are merged. M2 (REST API) is in a pull request; M3 (React frontend) is next. Local setup: Docker Desktop running, `.env` created from `.env.example`, `docker compose run --rm web pytest` passing.
 
 > A web app where organizers create events, attendees register and get a check-in code, and staff check people in at the door while a dashboard shows live attendance. A small version of the kind of event software real companies run.
 
 **Stack:** Python, Django, Django REST Framework, PostgreSQL, React, Docker Compose, pytest, GitHub Actions
 
-**Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI) and M1 (data model) done. M2 (REST API) next.
+**Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI) M1 (data model) and M2 (REST API) done. M3 (React frontend) next.
 
 ## Why this project
 Checking people in at an event looks simple until a line forms at the door. Several staff scan codes at once, the same ticket must never be accepted twice, and the organizer wants an attendance count they can trust in real time. Those are the same problems everyday business software has to handle: data integrity under concurrent writes, a clean API between the server and its clients, and a system that keeps running and can be diagnosed when something goes wrong.
@@ -19,9 +19,9 @@ The plan is to build it the way a small team would ship a production service, en
 
 ## Features
 **MVP**
-- [ ] Organizer login (token/JWT auth); roles: organizer, staff
-- [ ] Create events with ticket types and capacity
-- [ ] Public registration endpoint; attendee gets a unique check-in code
+- [x] Organizer login (token auth); roles per event: organizer (owner), staff
+- [x] Create events with ticket types and capacity
+- [x] Public registration endpoint; attendee gets a unique check-in code
 - [ ] Staff check-in screen: enter or scan a code, prevent double check-in
 - [ ] Live dashboard: registered vs. checked-in, per ticket type
 - [ ] CSV import of attendees, CSV export of attendance
@@ -36,7 +36,7 @@ The plan is to build it the way a small team would ship a production service, en
 |---|---|---|---|---|
 | M0 | Repo, Docker Compose (Django + Postgres), first test, GitHub Actions running tests | Git workflow, Docker, CI, pytest | week 2 | ☑ |
 | M1 | Data model (Event, TicketType, Attendee, CheckIn), migrations, admin, indexes | SQL, schema design, Django | week 4 | ☑ |
-| M2 | REST API with auth, permissions, filtering, pagination, OpenAPI docs; 80%+ test coverage | DRF, REST design, TDD | week 6 | ☐ |
+| M2 | REST API with auth, permissions, filtering, pagination, OpenAPI docs; 80%+ test coverage | DRF, REST design, TDD | week 6 | ☑ |
 | M3 | React frontend: events, registration, check-in screen, dashboard | JS/TS, React | week 8 | ☐ |
 | M4 | Logging, `/health`, Docker image, bash backup script, deploy to cloud, deploy workflow, write a post-mortem for a planted failure | Linux, logging, cloud, CI/CD, troubleshooting | week 10 | ☐ |
 | M5 | Load test, CSV import/export, architecture diagram, demo, final README, resume bullets | Performance, docs, communication | week 12 | ☐ |
@@ -61,8 +61,23 @@ docker compose run --rm web pytest
 
 The app is at http://localhost:8000 and the health check at http://localhost:8000/health/.
 
+To use the API, create a user (`docker compose run --rm web python manage.py createsuperuser`), then get a token with `POST /api/auth/token/` and send it as `Authorization: Token <token>`. Interactive API docs are at http://localhost:8000/api/docs/.
+
+## API
+| Method and path | Who | What |
+|---|---|---|
+| `POST /api/auth/token/` | anyone | Exchange username and password for a token |
+| `GET, POST /api/events/` | signed in | List events you own or staff; create one (you become its owner) |
+| `GET, PATCH, DELETE /api/events/{id}/` | owner (staff: read) | Event detail; owner sets `staff` by username |
+| `GET, POST, PATCH, DELETE /api/ticket-types/` | owner (staff: read) | Ticket types and capacity; can't delete one with registrations |
+| `GET /api/public/events/{id}/` | anyone | Event and remaining seats per ticket type |
+| `POST /api/public/events/{id}/register/` | anyone | Register; returns the check-in code. 409 if sold out or email already registered |
+| `POST /api/events/{id}/checkins/` | owner, staff | Check in by code. 409 with the original time if already checked in |
+| `GET /api/events/{id}/attendees/` | owner, staff | Paginated list; `?search=` and `?checked_in=true/false` |
+| `GET /api/events/{id}/stats/` | owner, staff | Capacity, registered and checked-in, per ticket type and total |
+
 ## Results (measured, not guessed)
-- Test coverage: 
+- Test coverage: 100% line and branch coverage of application code (40 tests; migrations and test files excluded), measured 2026-11-11. CI fails below 80%.
 - Load test (p95 latency at N concurrent users): 
 - Records loaded: 
 
