@@ -6,7 +6,7 @@
 
 **Stack:** Python, Django, Django REST Framework, PostgreSQL, React, Docker Compose, pytest, GitHub Actions
 
-**Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI) done. M1 (data model) next.
+**Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI) and M1 (data model) done. M2 (REST API) next.
 
 ## Why this project
 Checking people in at an event looks simple until a line forms at the door. Several staff scan codes at once, the same ticket must never be accepted twice, and the organizer wants an attendance count they can trust in real time. Those are the same problems everyday business software has to handle: data integrity under concurrent writes, a clean API between the server and its clients, and a system that keeps running and can be diagnosed when something goes wrong.
@@ -35,7 +35,7 @@ The plan is to build it the way a small team would ship a production service, en
 | # | Milestone | Skills | Target | Done |
 |---|---|---|---|---|
 | M0 | Repo, Docker Compose (Django + Postgres), first test, GitHub Actions running tests | Git workflow, Docker, CI, pytest | week 2 | ☑ |
-| M1 | Data model (Event, TicketType, Attendee, CheckIn), migrations, admin, indexes | SQL, schema design, Django | week 4 | ☐ |
+| M1 | Data model (Event, TicketType, Attendee, CheckIn), migrations, admin, indexes | SQL, schema design, Django | week 4 | ☑ |
 | M2 | REST API with auth, permissions, filtering, pagination, OpenAPI docs; 80%+ test coverage | DRF, REST design, TDD | week 6 | ☐ |
 | M3 | React frontend: events, registration, check-in screen, dashboard | JS/TS, React | week 8 | ☐ |
 | M4 | Logging, `/health`, Docker image, bash backup script, deploy to cloud, deploy workflow, write a post-mortem for a planted failure | Linux, logging, cloud, CI/CD, troubleshooting | week 10 | ☐ |
