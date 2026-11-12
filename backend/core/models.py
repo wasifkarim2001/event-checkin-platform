@@ -15,15 +15,25 @@ def generate_checkin_code():
     return "".join(secrets.choice(CODE_ALPHABET) for _ in range(CODE_LENGTH))
 
 
+class EventQuerySet(models.QuerySet):
+    def visible_to(self, user):
+        return self.filter(Q(owner=user) | Q(staff=user)).distinct()
+
+
 class Event(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="events"
+    )
+    staff = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, blank=True, related_name="staffed_events"
     )
     name = models.CharField(max_length=200)
     venue = models.CharField(max_length=200, blank=True)
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = EventQuerySet.as_manager()
 
     class Meta:
         ordering = ["starts_at"]
