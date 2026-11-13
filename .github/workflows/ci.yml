@@ -16,6 +16,13 @@ jobs:
         run: docker compose run --rm web python manage.py makemigrations --check --dry-run
       - name: Fail if the OpenAPI schema has warnings
         run: docker compose run --rm web python manage.py spectacular --validate --fail-on-warn --file /tmp/schema.yml
+      - name: Fail if production settings have deploy warnings
+        run: >
+          docker compose run --rm
+          -e DJANGO_DEBUG=0
+          -e DJANGO_SECRET_KEY=$(openssl rand -base64 48)
+          -e DJANGO_ALLOWED_HOSTS=example.com
+          web python manage.py check --deploy --fail-level WARNING
       - name: Run tests
         run: docker compose run --rm web pytest
 
