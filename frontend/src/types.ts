@@ -45,3 +45,19 @@ export type Registration = {
   email: string;
   ticket_type: number;
 };
+
+export type Attendee = {
+  id: number;
+  name: string;
+  email: string;
+  code: string;
+  ticket_type: string;
+  registered_at: string;
+  checked_in_at: string | null;
+};
+
+export type CheckInResult = {
+  attendee: Attendee;
+  checked_in_at: string;
+  checked_in_by: string | null;
+};

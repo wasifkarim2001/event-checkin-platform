@@ -20,3 +20,21 @@ button:disabled { opacity: 0.6; cursor: default; }
   font-weight: 700;
   letter-spacing: 0.15em;
 }
+
+.code-input {
+  font-family: ui-monospace, monospace;
+  font-size: 1.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.result {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.125rem;
+}
+.result.ok { background: #e6f4ea; color: #1e6b34; }
+.result.warn { background: #fff4e5; color: #8a4b00; }
+.result.error { background: #fdecea; color: #b00020; }

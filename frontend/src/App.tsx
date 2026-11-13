@@ -4,6 +4,7 @@ import { getToken } from "./api";
 import LoginPage from "./LoginPage";
 import StaffEventsPage from "./StaffEventsPage";
 import RegisterPage from "./RegisterPage";
+import CheckInPage from "./CheckInPage";
 
 function RequireAuth({ children }: { children: ReactNode }) {
   return getToken() ? children : <Navigate to="/login" replace />;
@@ -19,6 +20,14 @@ export default function App() {
         element={
           <RequireAuth>
             <StaffEventsPage />
+          </RequireAuth>
+        }
+      />
+            <Route
+        path="/staff/events/:eventId/checkin"
+        element={
+          <RequireAuth>
+            <CheckInPage />
           </RequireAuth>
         }
       />
