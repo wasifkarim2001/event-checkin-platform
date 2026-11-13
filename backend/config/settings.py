@@ -136,7 +136,6 @@ WHITENOISE_ROOT = FRONTEND_DIST if FRONTEND_DIST.is_dir() else None
 # Vite puts a content hash in every file name under /assets/, so they can be cached forever.
 WHITENOISE_IMMUTABLE_FILE_TEST = lambda path, url: url.startswith("/assets/")  # noqa: E731
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

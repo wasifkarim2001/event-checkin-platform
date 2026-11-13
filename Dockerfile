@@ -1,3 +1,6 @@
+# Production image. Build from the repo root: docker build -t checkin .
+
+# Stage 1: build the React app into static files.
 FROM node:24-slim AS frontend
 WORKDIR /frontend
 COPY frontend/package.json frontend/package-lock.json ./
@@ -5,6 +8,7 @@ RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
+# Stage 2: Django served by gunicorn; only the built files come from stage 1.
 FROM python:3.13-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
