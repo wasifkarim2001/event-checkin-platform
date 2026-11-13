@@ -1,11 +1,18 @@
+import logging
+
 from django.db.models import Count, Prefetch, Q
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics, permissions, status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from . import services
+from .authentication import is_expired
+
 from .models import Attendee, Event, TicketType
 from .serializers import (
     AttendeeSerializer,
@@ -19,6 +26,7 @@ from .serializers import (
     TicketTypeSerializer,
 )
 
+logger = logging.getLogger(__name__)
 
 class IsEventOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -131,3 +139,27 @@ class RegisterView(generics.GenericAPIView):
         v = data.validated_data
         attendee = services.register_attendee(pk, v["ticket_type"], v["name"], v["email"])
         return Response(RegistrationResultSerializer(attendee).data, status=status.HTTP_201_CREATED)
+
+
+
+class LoginView(ObtainAuthToken):
+    # A stale token sent along with the login request must not block the login.
+    authentication_classes = []
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        token, _ = Token.objects.get_or_create(user=user)
+        if is_expired(token):
+            token.delete()
+            token = Token.objects.create(user=user)
+        logger.info("login", extra={"user_id": user.pk})
+        return Response({"token": token.key})
+
+
+class LogoutView(APIView):
+    @extend_schema(request=None, responses={204: None})
+    def post(self, request):
+        request.auth.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
