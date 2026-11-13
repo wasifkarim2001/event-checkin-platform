@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'core.middleware.RequestLogMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -151,3 +152,18 @@ SECURE_HSTS_SECONDS = 0 if DEBUG else 3600
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # Preload is a permanent opt-in for a domain we own; not for *.onrender.com.
 SILENCED_SYSTEM_CHECKS = ["security.W021"]
+
+# JSON logs to stdout; the platform (Render) collects stdout.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {"json": {"()": "core.logs.JsonFormatter"}},
+    "handlers": {"stdout": {"class": "logging.StreamHandler", "stream": "ext://sys.stdout", "formatter": "json"}},
+    "root": {"handlers": ["stdout"], "level": os.environ.get("LOG_LEVEL", "INFO")},
+    # Remove Django's plain-text console handler; its messages reach root as JSON instead.
+    "loggers": {
+        "django": {"handlers": [], "level": "INFO"},
+        # 4xx warnings repeat our request line; keep only 500s (with traceback).
+        "django.request": {"level": "ERROR"},
+    },
+}
