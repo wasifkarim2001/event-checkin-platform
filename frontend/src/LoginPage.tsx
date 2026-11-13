@@ -20,11 +20,9 @@ export default function LoginPage() {
       setToken(token);
       navigate("/staff");
     } catch (err) {
-      setError(
-        err instanceof ApiError && err.status === 400
-          ? "Wrong username or password."
-          : "Something went wrong. Try again.",
-      );
+      if (err instanceof ApiError && err.status === 400) setError("Wrong username or password.");
+      else if (err instanceof ApiError && err.status === 429) setError("Too many attempts. Wait a minute and try again.");
+      else setError("Something went wrong. Try again.");
     } finally {
       setBusy(false);
     }
