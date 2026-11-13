@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { api, ApiError, clearToken } from "./api";
 import type { EventInfo, Page } from "./types";
 
@@ -43,6 +43,8 @@ export default function StaffEventsPage() {
           <li key={event.id}>
             <strong>{event.name}</strong>, {new Date(event.starts_at).toLocaleString()}
             {event.venue && ` at ${event.venue}`}
+           {" · "}
+            <Link to={`/events/${event.id}/register`}>Registration page</Link>
           </li>
         ))}
       </ul>

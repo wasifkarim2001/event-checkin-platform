@@ -22,3 +22,26 @@ export type Page<T> = {
   previous: string | null;
   results: T[];
 };
+
+export type PublicTicketType = {
+  id: number;
+  name: string;
+  capacity: number;
+  remaining: number;
+};
+
+export type PublicEvent = {
+  id: number;
+  name: string;
+  venue: string;
+  starts_at: string;
+  ends_at: string;
+  ticket_types: PublicTicketType[];
+};
+
+export type Registration = {
+  code: string;
+  name: string;
+  email: string;
+  ticket_type: number;
+};

@@ -34,3 +34,14 @@ export async function api<T>(
   if (!response.ok) throw new ApiError(response.status, data);
   return data as T;
 }
+
+export function errorMessage(err: unknown, fallback: string): string {
+  if (!(err instanceof ApiError) || typeof err.body !== "object" || err.body === null) {
+    return fallback;
+  }
+  const body = err.body as Record<string, unknown>;
+  const first = body.detail ?? Object.values(body)[0];
+  if (typeof first === "string") return first;
+  if (Array.isArray(first) && typeof first[0] === "string") return first[0];
+  return fallback;
+}
