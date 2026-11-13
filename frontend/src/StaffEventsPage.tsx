@@ -24,19 +24,18 @@ export default function StaffEventsPage() {
     };
   }, [navigate]);
 
-    async function signOut() {
+  async function signOut() {
     // Best effort: delete the token on the server, then forget it locally either way.
     await api("/auth/logout/", { method: "POST" }).catch(() => {});
     clearToken();
     navigate("/login");
   }
 
-
   return (
     <main>
       <header className="row">
         <h1>Your events</h1>
-          <button onClick={() => void signOut()}>Sign out</button>
+        <button onClick={() => void signOut()}>Sign out</button>
       </header>
       {error && <p role="alert">{error}</p>}
       {events === null && !error && <p>Loading…</p>}
