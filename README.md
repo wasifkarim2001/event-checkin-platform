@@ -1,12 +1,12 @@
 # Event Check-In Platform
 
-> **Next time (updated 2026-11-12):** M0 to M2 are merged; M3 (React frontend) is in a pull request; M4 (deployment) is next. Local setup: Docker Desktop running, `.env` created from `.env.example`, then `docker compose up -d` starts the database, API and frontend.
+> **Next time (updated 2026-11-12):** M0 to M3 are merged; M4 (deployment) is in progress, targeting Render (app) and Neon (PostgreSQL) on free tiers. Local setup: Docker Desktop running, `.env` created from `.env.example`, then `docker compose up -d` starts the database, API and frontend.
 
 > A web app where organizers create events, attendees register and get a check-in code, and staff check people in at the door while a dashboard shows live attendance. A small version of the kind of event software real companies run.
 
 **Stack:** Python, Django, Django REST Framework, PostgreSQL, React, Docker Compose, pytest, GitHub Actions
 
-**Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI), M1 (data model), M2 (REST API) and M3 (React frontend) done. M4 (deployment) next.
+**Status:** In progress. M0 (Docker, Django, PostgreSQL, `/health`, CI), M1 (data model), M2 (REST API) and M3 (React frontend) done. M4 (deployment) in progress.
 
 ## Why this project
 Checking people in at an event looks simple until a line forms at the door. Several staff scan codes at once, the same ticket must never be accepted twice, and the organizer wants an attendance count they can trust in real time. Those are the same problems everyday business software has to handle: data integrity under concurrent writes, a clean API between the server and its clients, and a system that keeps running and can be diagnosed when something goes wrong.
