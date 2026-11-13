@@ -25,6 +25,9 @@ jobs:
           web python manage.py check --deploy --fail-level WARNING
       - name: Run tests
         run: docker compose run --rm web pytest
+      - name: Build the production image
+        run: docker build -t checkin .
+
 
   frontend:
     runs-on: ubuntu-latest
