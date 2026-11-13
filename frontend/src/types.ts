@@ -1,0 +1,78 @@
+export type TicketType = {
+  id: number;
+  event: number;
+  name: string;
+  capacity: number;
+};
+
+export type EventInfo = {
+  id: number;
+  name: string;
+  venue: string;
+  starts_at: string;
+  ends_at: string;
+  owner: string;
+  staff: string[];
+  ticket_types: TicketType[];
+};
+
+export type Page<T> = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+};
+
+export type PublicTicketType = {
+  id: number;
+  name: string;
+  capacity: number;
+  remaining: number;
+};
+
+export type PublicEvent = {
+  id: number;
+  name: string;
+  venue: string;
+  starts_at: string;
+  ends_at: string;
+  ticket_types: PublicTicketType[];
+};
+
+export type Registration = {
+  code: string;
+  name: string;
+  email: string;
+  ticket_type: number;
+};
+
+export type Attendee = {
+  id: number;
+  name: string;
+  email: string;
+  code: string;
+  ticket_type: string;
+  registered_at: string;
+  checked_in_at: string | null;
+};
+
+export type CheckInResult = {
+  attendee: Attendee;
+  checked_in_at: string;
+  checked_in_by: string | null;
+};
+
+export type TicketTypeStats = {
+  id: number;
+  name: string;
+  capacity: number;
+  registered: number;
+  checked_in: number;
+};
+
+export type EventStats = {
+  capacity: number;
+  registered: number;
+  checked_in: number;
+  ticket_types: TicketTypeStats[];
+};
