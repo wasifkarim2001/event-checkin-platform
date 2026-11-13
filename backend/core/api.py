@@ -8,11 +8,11 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from . import services
 from .authentication import is_expired
-
 from .models import Attendee, Event, TicketType
 from .serializers import (
     AttendeeSerializer,
@@ -27,6 +27,7 @@ from .serializers import (
 )
 
 logger = logging.getLogger(__name__)
+
 
 class IsEventOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -131,6 +132,8 @@ class RegisterView(generics.GenericAPIView):
     serializer_class = RegistrationSerializer
     permission_classes = [permissions.AllowAny]
     authentication_classes = []
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "register"
 
     @extend_schema(responses={201: RegistrationResultSerializer})
     def post(self, request, pk):
@@ -141,10 +144,12 @@ class RegisterView(generics.GenericAPIView):
         return Response(RegistrationResultSerializer(attendee).data, status=status.HTTP_201_CREATED)
 
 
-
 class LoginView(ObtainAuthToken):
     # A stale token sent along with the login request must not block the login.
     authentication_classes = []
+    # ObtainAuthToken turns throttling off; turn it back on against password guessing.
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "login"
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

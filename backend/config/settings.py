@@ -135,7 +135,18 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    # Per client IP; applies only to views that set throttle_scope.
+    "DEFAULT_THROTTLE_RATES": {"register": "20/hour", "login": "5/minute"},
+    # Proxies in front of Django that append to X-Forwarded-For (0 locally).
+    "NUM_PROXIES": int(os.environ.get("NUM_PROXIES", "0")),
 }
+
+# Throttle counters live in PostgreSQL so all gunicorn workers share them.
+# Create the table with: python manage.py createcachetable
+CACHES = {
+    "default": {"BACKEND": "django.core.cache.backends.db.DatabaseCache", "LOCATION": "django_cache"},
+}
+
 TOKEN_TTL_HOURS = int(os.environ.get("TOKEN_TTL_HOURS", "12"))
 
 SPECTACULAR_SETTINGS = {
