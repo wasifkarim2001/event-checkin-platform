@@ -38,3 +38,23 @@ button:disabled { opacity: 0.6; cursor: default; }
 .result.ok { background: #e6f4ea; color: #1e6b34; }
 .result.warn { background: #fff4e5; color: #8a4b00; }
 .result.error { background: #fdecea; color: #b00020; }
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.stat {
+  display: grid;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+.stat-value { font-size: 2.5rem; font-weight: 700; line-height: 1.1; }
+.stat-value small { font-size: 1.25rem; font-weight: 400; color: #666; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd; vertical-align: top; }
+progress { display: block; width: 100%; margin-top: 0.25rem; }
+.muted { color: #666; font-size: 0.875rem; }

@@ -47,6 +47,8 @@ export default function StaffEventsPage() {
             <Link to={`/events/${event.id}/register`}>Registration page</Link>
                         {" · "}
             <Link to={`/staff/events/${event.id}/checkin`}>Check in</Link>
+                        {" · "}
+            <Link to={`/staff/events/${event.id}/dashboard`}>Dashboard</Link>
           </li>
         ))}
       </ul>

@@ -61,3 +61,18 @@ export type CheckInResult = {
   checked_in_at: string;
   checked_in_by: string | null;
 };
+
+export type TicketTypeStats = {
+  id: number;
+  name: string;
+  capacity: number;
+  registered: number;
+  checked_in: number;
+};
+
+export type EventStats = {
+  capacity: number;
+  registered: number;
+  checked_in: number;
+  ticket_types: TicketTypeStats[];
+};

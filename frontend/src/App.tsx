@@ -5,6 +5,7 @@ import LoginPage from "./LoginPage";
 import StaffEventsPage from "./StaffEventsPage";
 import RegisterPage from "./RegisterPage";
 import CheckInPage from "./CheckInPage";
+import DashboardPage from "./DashboardPage";
 
 function RequireAuth({ children }: { children: ReactNode }) {
   return getToken() ? children : <Navigate to="/login" replace />;
@@ -28,6 +29,14 @@ export default function App() {
         element={
           <RequireAuth>
             <CheckInPage />
+          </RequireAuth>
+        }
+      />
+            <Route
+        path="/staff/events/:eventId/dashboard"
+        element={
+          <RequireAuth>
+            <DashboardPage />
           </RequireAuth>
         }
       />
