@@ -25,6 +25,18 @@ jobs:
           web python manage.py check --deploy --fail-level WARNING
       - name: Run tests
         run: docker compose run --rm web pytest
+      - name: Back up the database and restore it into an empty one
+        run: |
+          docker compose run --rm web python manage.py migrate --noinput
+          docker compose exec -T db createdb -U checkin restore_check
+          pg="docker run --rm --network event-checkin-platform_default -v $PWD:/w -w /w postgres:17"
+          $pg env DATABASE_URL=postgresql://checkin:change-me@db/checkin bash scripts/backup.sh backups
+          $pg env DATABASE_URL=postgresql://checkin:change-me@db/restore_check bash scripts/restore.sh backups/*.dump
+          count() { docker compose exec -T db psql -U checkin -d "$1" -tAc "select count(*) from django_migrations"; }
+          src=$(count checkin)
+          dst=$(count restore_check)
+          echo "migrations in source: $src, restored: $dst"
+          test "$src" -gt 0 && test "$src" = "$dst"
       - name: Build the production image
         run: docker build -t checkin .
 
