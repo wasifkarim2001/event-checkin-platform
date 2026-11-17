@@ -1,0 +1,41 @@
+name: Deploy
+
+# Runs after CI finishes on main; the job below only continues if CI passed.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+# One deploy at a time; a newer merge waits instead of cancelling a deploy halfway.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SITE: https://event-checkin-platform.onrender.com
+      SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Ask Render to deploy the commit CI tested
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: curl -fsS -X POST "$HOOK&ref=$SHA" > /dev/null
+
+      - name: Wait until the new commit is serving
+        run: |
+          for attempt in $(seq 1 60); do
+            live=$(curl -fsS --max-time 60 "$SITE/health/" | jq -r .commit || true)
+            echo "attempt $attempt: live commit is ${live:-unreachable}"
+            if [ "$live" = "$SHA" ]; then exit 0; fi
+            sleep 15
+          done
+          echo "commit $SHA was not live after 15 minutes"
+          exit 1
+
+      - name: Smoke-test the React app
+        run: curl -fsS "$SITE/" | grep -q 'id="root"'
