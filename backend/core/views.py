@@ -1,4 +1,5 @@
 import logging
+import os
 
 from django.conf import settings
 from django.db import DatabaseError, connection
@@ -14,7 +15,9 @@ def health(request):
     except DatabaseError:
         logger.exception("health check failed: database unreachable")
         return JsonResponse({"status": "error", "database": "unreachable"}, status=503)
-    return JsonResponse({"status": "ok", "database": "ok"})
+    # Render sets RENDER_GIT_COMMIT; the deploy workflow waits until this matches the commit it deployed.
+    commit = os.environ.get("RENDER_GIT_COMMIT", "unknown")
+    return JsonResponse({"status": "ok", "database": "ok", "commit": commit})
 
 
 def spa(request):
