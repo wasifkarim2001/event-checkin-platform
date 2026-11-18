@@ -23,4 +23,3 @@ urlpatterns = [
     # Everything else is a React route; must stay last.
     re_path(r"^(?!api/|admin/|static/|assets/).*$", spa),
 ]
-

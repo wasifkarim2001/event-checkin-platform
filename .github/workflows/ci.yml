@@ -20,7 +20,7 @@ jobs:
         run: >
           docker compose run --rm
           -e DJANGO_DEBUG=0
-          -e DJANGO_SECRET_KEY=$(openssl rand -base64 48)
+          -e DJANGO_SECRET_KEY="$(openssl rand -base64 48)"
           -e DJANGO_ALLOWED_HOSTS=example.com
           web python manage.py check --deploy --fail-level WARNING
       - name: Run tests
