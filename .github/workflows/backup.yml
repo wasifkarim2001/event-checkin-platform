@@ -1,0 +1,49 @@
+name: Backup
+
+# Daily at 06:17 UTC (off the hour, when GitHub delays scheduled runs less), plus a manual button.
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # pg_dump must be at least the server's version (Neon runs 17); the runner's own client is older.
+    container: postgres:17
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Dump the production database
+        env:
+          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+        run: bash scripts/backup.sh backups
+
+      # The repo is public and anyone signed in to GitHub can download its artifacts,
+      # so only the encrypted file is uploaded. The passphrase goes in on stdin, not the command line.
+      - name: Encrypt the dump and check that it decrypts
+        env:
+          PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          dump=$(ls backups/*.dump)
+          printf '%s' "$PASSPHRASE" | gpg --batch --pinentry-mode loopback --passphrase-fd 0 \
+            --symmetric --cipher-algo AES256 --output "$dump.gpg" "$dump"
+          rm "$dump"
+          printf '%s' "$PASSPHRASE" | gpg --batch --pinentry-mode loopback --passphrase-fd 0 \
+            --decrypt "$dump.gpg" | pg_restore --list > /dev/null
+          echo "encrypted: $dump.gpg"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: neon-backup-${{ github.run_id }}
+          path: backups/*.gpg
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
